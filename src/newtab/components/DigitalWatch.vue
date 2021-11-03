@@ -1,16 +1,20 @@
 <template>
   <div id="clock">
     <div class="clock__time">
-      <p class="time__text">{{ time }}</p>
+      <p class="time__text">
+        {{ time }}
+      </p>
       <span class="time__mid">{{ mid }}</span>
     </div>
-    <p class="clock__date">{{ date }}</p>
+    <p class="clock__date">
+      {{ date }}
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, onUnmounted } from 'vue';
-import dayjs from 'dayjs';
+import { reactive, toRefs, onUnmounted } from 'vue'
+import dayjs from 'dayjs'
 
 export default {
   name: 'DigitalWatch',
@@ -26,25 +30,25 @@ export default {
       time: '',
       mid: '',
       date: '',
-    });
+    })
 
     const updateTime = () => {
-      state.time = dayjs().format('HH:mm:ss');
-      state.mid = dayjs().format('a');
-      state.date = dayjs().format('YYYY-MM-DD dddd');
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
+      state.time = dayjs().format('HH:mm:ss')
+      state.mid = dayjs().format('a')
+      state.date = dayjs().format('YYYY-MM-DD dddd')
+    }
+    updateTime()
+    const timer = setInterval(updateTime, 1000)
 
     onUnmounted(() => {
-      clearInterval(timer);
-    });
+      clearInterval(timer)
+    })
 
     return {
       ...toRefs(state),
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import Bookmark from './components/Bookmark.vue';
-import DigitalWatch from './components/DigitalWatch.vue';
+import Bookmark from './components/Bookmark.vue'
+import DigitalWatch from './components/DigitalWatch.vue'
 </script>
 
 <template>
@@ -16,6 +16,7 @@ import DigitalWatch from './components/DigitalWatch.vue';
     --main-bg-color: #35363a;
     --bookmark-item-bg-color-default: #bdc3c7;
     --bookmark-item-bg-color-active: #ecf0f1;
+    --text-color-bookmark: #000;
     --text-color-main: #fff;
     --text-color-watch: #ecf0f1;
   }
@@ -26,6 +27,7 @@ import DigitalWatch from './components/DigitalWatch.vue';
     --main-bg-color: #fff;
     --bookmark-item-bg-color-default: #ccc;
     --bookmark-item-bg-color-active: #fff;
+    --text-color-bookmark: #000;
     --text-color-main: #2c3e50;
     --text-color-watch: #2c3e50;
   }
