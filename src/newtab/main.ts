@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './Newtab.vue'
-import './style/normalize.css'
+import '../styles'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+app.mount('#app')

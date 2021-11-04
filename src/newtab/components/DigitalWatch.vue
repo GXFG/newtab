@@ -1,12 +1,12 @@
 <template>
-  <div id="clock">
-    <div class="clock__time">
-      <p class="time__text">
+  <div class="absolute top-1/2 left-1/2 text-center transform -translate-x-1/2 -translate-y-1/2 font-round tracking-wider select-none">
+    <div class="flex items-baseline">
+      <p class="text-8xl">
         {{ time }}
       </p>
-      <span class="time__mid">{{ mid }}</span>
+      <span class="text-2xl">{{ mid }}</span>
     </div>
-    <p class="clock__date">
+    <p class="text-2xl">
       {{ date }}
     </p>
   </div>
@@ -18,13 +18,6 @@ import dayjs from 'dayjs'
 
 export default {
   name: 'DigitalWatch',
-  components: {},
-  props: {
-    demoProps: {
-      type: String,
-      default: '',
-    },
-  },
   setup() {
     const state = reactive({
       time: '',
@@ -50,32 +43,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-#clock {
-  font-family: -apple-system, "Arial Rounded MT Bold", "Rockwell", "Andale Mono", monospace;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--text-color-watch);
-  /* text-shadow: 0 0 20px var(--text-color-watch), 0 0 20px rgba(10, 175, 230, 0); */
-  text-align: center;
-}
-#clock .clock__time {
-  display: flex;
-  align-items: baseline;
-}
-#clock .clock__time .time__text {
-  letter-spacing: 0.03em;
-  font-size: 96px;
-  padding: 5px 0;
-}
-#clock .clock__time .time__mid {
-  font-size: 20px;
-}
-#clock .clock__date {
-  letter-spacing: 0.05em;
-  font-size: 24px;
-}
-</style>

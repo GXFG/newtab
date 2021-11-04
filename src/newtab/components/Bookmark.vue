@@ -5,7 +5,7 @@
         v-for="item in rowData"
         :key="item.key"
         class="row__item"
-        :class="{ 'row__item--active': item.key === currSelect }"
+        :class="{ 'row__item--active': item.key === currSelectKey }"
         :title="item.url"
         @click="onOpenBookmark(item.url)"
       >
@@ -28,7 +28,12 @@
 
 <script lang="ts">
 import { reactive, toRefs, computed } from 'vue'
-import * as config from '../config/config'
+import * as store from '@/logic/store'
+
+// 书签内按键触发间隔
+const PRESS_INTERVAL_TIME = 200
+// 键盘布局
+const KEYBOARD_KEY = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm']
 
 export default {
   name: 'Bookmark',
@@ -36,19 +41,23 @@ export default {
     const state = reactive({
       bookmarkList: [] as any,
       bookmarkKeyToIndexMap: {} as any,
-      currSelect: '',
+      currSelectKey: '',
     })
 
     const initBookmarkListData = () => {
-      config.KEYBOARD_KEY.forEach((key: string, index: number) => {
+      KEYBOARD_KEY.forEach((key: string, index: number) => {
+        state.bookmarkKeyToIndexMap[key] = index
         state.bookmarkList.push({
           key,
           url: '',
+          label: '',
+          icon: '',
         })
-        state.bookmarkKeyToIndexMap[key] = index
       })
+    }
 
-      for (const item of config.MY_BOOKMARK) {
+    const getBookmarkSetting = () => {
+      for (const item of store.state.setting.bookmark) {
         const _index = state.bookmarkKeyToIndexMap[item.key]
         const _domain = item.url.split('/')[2]
         let _label = ''
@@ -66,7 +75,9 @@ export default {
         }
       }
     }
+
     initBookmarkListData()
+    getBookmarkSetting()
 
     const keyBoardRowList = computed(() => {
       return [
@@ -86,7 +97,7 @@ export default {
     // 监听键盘按键
     let timer = null as any
     document.onkeydown = function(e: KeyboardEvent) {
-      if (!config.KEYBOARD_KEY.includes(e.key))
+      if (!KEYBOARD_KEY.includes(e.key))
         return
 
       const _index = state.bookmarkKeyToIndexMap[e.key]
@@ -94,15 +105,15 @@ export default {
       if (_url.length === 0)
         return
 
-      if (e.key === state.currSelect) {
+      if (e.key === state.currSelectKey) {
         onOpenBookmark(_url)
       }
       else {
-        state.currSelect = e.key
+        state.currSelectKey = e.key
         clearTimeout(timer)
         timer = setTimeout(() => {
-          state.currSelect = ''
-        }, config.PRESS_INTERVAL_TIME)
+          state.currSelectKey = ''
+        }, PRESS_INTERVAL_TIME)
       }
     }
 
@@ -136,7 +147,6 @@ export default {
 #bookmark .bookmark__row .row__item {
   position: relative;
   margin: 3px;
-  padding: 3px;
   width: 50px;
   height: 50px;
   color: var(--text-color-bookmark);
@@ -167,6 +177,7 @@ export default {
 }
 
 #bookmark .bookmark__row .row__item .item__label {
+  padding: 0 3px;
   height: 15px;
   overflow: hidden;
   white-space: nowrap;

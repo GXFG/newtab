@@ -1,5 +1,5 @@
 <template>
-  <main class="w-[300px] px-4 py-5 text-center text-gray-700">
+  <main class="w-[300px] px-4 py-5 text-center">
     <Logo />
     <div>Popup</div>
     <p class="mt-2 opacity-50">
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { storageDemo } from '~/logic/storage'
+import { storageDemo } from '@/logic/storage'
 
 function openOptionsPage() {
   browser.runtime.openOptionsPage()

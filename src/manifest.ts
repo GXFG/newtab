@@ -14,9 +14,21 @@ export async function getManifest() {
     version: pkg.version,
     description: pkg.description,
     browser_action: {
-      default_icon: './assets/icon-512.png',
+      default_icon: './assets/img/icon.png',
       default_popup: './dist/popup/index.html',
     },
+    icons: {
+      16: './assets/img/icon.png',
+      48: './assets/img/icon.png',
+      128: './assets/img/icon.png',
+    },
+    permissions: [
+      'tabs',
+      'storage',
+      'activeTab',
+      'http://*/',
+      'https://*/',
+    ],
     chrome_url_overrides: {
       newtab: './dist/newtab/index.html',
     },
@@ -29,18 +41,6 @@ export async function getManifest() {
       page: './dist/background/index.html',
       persistent: false,
     },
-    icons: {
-      16: './assets/icon-512.png',
-      48: './assets/icon-512.png',
-      128: './assets/icon-512.png',
-    },
-    permissions: [
-      'tabs',
-      'storage',
-      'activeTab',
-      'http://*/',
-      'https://*/',
-    ],
     content_scripts: [{
       matches: ['http://*/*', 'https://*/*'],
       js: ['./dist/contentScripts/index.global.js'],
