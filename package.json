@@ -20,7 +20,8 @@
     "start:chromium": "web-ext run --source-dir ./extension --target=chromium",
     "start:firefox": "web-ext run --source-dir ./extension --target=firefox-desktop",
     "clear": "rimraf extension/dist extension/manifest.json extension.*",
-    "lint": "eslint 'src/**/*.{json,ts,js,vue}'"
+    "lint": "eslint 'src/**/*.{json,ts,js,vue}'",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.9.0",
