@@ -1,22 +1,32 @@
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --main-bg-color: #35363a;
-    --bookmark-item-bg-color-default: #bdc3c7;
-    --bookmark-item-bg-color-active: #ecf0f1;
-    --text-color-bookmark: #000;
-    --text-color-main: #fff;
-    --text-color-watch: #ecf0f1;
+    --text-color-main: #2c3e50;
+    --bg-main: #fff;
+    /* bookmark */
+    --text-color-bookmark: #0f172a;
+    --bg-bookmark-item-default: #d1d5db;
+    --bg-bookmark-item-active: #fff;
+    --shadow-bookmark-item: rgba(44, 62, 80, 10%);
+    /* watch */
+    --text-color-watch: #2c3e50;
+    --shadow-watch-a: rgba(0, 0, 0, 0.2);
+    --shadow-watch-b: rgba(200, 255, 255, 0.3);
   }
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
-    --main-bg-color: #fff;
-    --bookmark-item-bg-color-default: #ccc;
-    --bookmark-item-bg-color-active: #fff;
-    --text-color-bookmark: #000;
-    --text-color-main: #2c3e50;
-    --text-color-watch: #2c3e50;
+    --text-color-main: #fff;
+    --bg-main: #35363a;
+    /* bookmark */
+    --text-color-bookmark: #0f172a;
+    --bg-bookmark-item-default: #d4d4d8;
+    --bg-bookmark-item-active: #ecf0f1;
+    --shadow-bookmark-item: rgba(0, 0, 0, 15%);
+    /* watch */
+    --text-color-watch: #e4e4e7;
+    --shadow-watch-a: rgba(0, 0, 0, 40%);
+    --shadow-watch-b: rgba(0, 0, 0, 5%);
   }
 }
 
@@ -26,11 +36,7 @@ body {
     sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   font-size: 14px;
   color: var(--text-color-main);
-  background-color: var(--main-bg-color);
-}
-
-.font-round {
-  font-family: "Arial Rounded MT Bold", "Rockwell", "Andale Mono", monospace;
+  background-color: var(--bg-main);
 }
 
 .btn {

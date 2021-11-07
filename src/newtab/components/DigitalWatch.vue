@@ -1,12 +1,12 @@
 <template>
-  <div class="absolute top-1/2 left-1/2 text-center transform -translate-x-1/2 -translate-y-1/2 font-round tracking-wider select-none">
-    <div class="flex items-baseline">
-      <p class="text-8xl">
+  <div id="clock">
+    <div class="clock__time">
+      <p class="time__text">
         {{ time }}
       </p>
-      <span class="text-2xl">{{ mid }}</span>
+      <span class="time__mid">{{ mid }}</span>
     </div>
-    <p class="text-2xl">
+    <p class="clock__date">
       {{ date }}
     </p>
   </div>
@@ -26,7 +26,7 @@ export default {
     })
 
     const updateTime = () => {
-      state.time = dayjs().format('HH:mm:ss')
+      state.time = dayjs().format('hh:mm:ss')
       state.mid = dayjs().format('a')
       state.date = dayjs().format('YYYY-MM-DD dddd')
     }
@@ -43,3 +43,30 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+#clock {
+  font-family: "Arial Rounded MT Bold", "Rockwell", "Andale Mono", monospace;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-color-watch);
+  text-align: center;
+  text-shadow: 2px 8px 6px var(--shadow-watch-a),
+    0px -5px 35px var(--shadow-watch-b);
+}
+#clock .clock__time {
+  display: flex;
+  align-items: baseline;
+}
+#clock .clock__time .time__text {
+  font-size: 90px;
+}
+#clock .clock__time .time__mid {
+  font-size: 20px;
+}
+#clock .clock__date {
+  font-size: 24px;
+}
+</style>

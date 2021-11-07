@@ -1,7 +1,9 @@
 <template>
-  <Operation />
-  <Bookmark />
-  <DigitalWatch />
+  <div>
+    <Operation />
+    <Bookmark />
+    <DigitalWatch />
+  </div>
 </template>
 
 <script setup lang="ts">

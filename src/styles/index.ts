@@ -1,3 +1,3 @@
-import './normalize.css'
-import './main.css'
 import 'virtual:windi.css'
+import './reset.css'
+import './main.css'

@@ -25,15 +25,15 @@ export const uploadSetting = () => {
 export const downloadSetting = () => {
   return new Promise((resolve) => {
     chrome.storage.sync.get(null, ({ MyNewTabSetting }) => {
-      log('Download settings success', MyNewTabSetting)
       if (!MyNewTabSetting) {
         return
       }
       const cloudSetting = JSON.parse(MyNewTabSetting)
       if (cloudSetting.lastSyncTimestamp === globalState.setting.lastSyncTimestamp) {
-        log('Settings without update')
+        log('No settings update')
         return
       }
+      log('Update settings', MyNewTabSetting)
       globalState.setting.lastSyncTimestamp = cloudSetting.lastSyncTimestamp
       if (cloudSetting.bookmarks) {
         globalState.setting.bookmarks = cloudSetting.bookmarks

@@ -1,28 +1,66 @@
 <template>
-  <div>
-    <div class="absolute right-0 bottom-0 flex flex-col justify-center items-center" m="4">
-      <div
-        class="flex flex-col justify-center items-center bg-gray-600 rounded-lg transition"
-        :class="isSettingMode ? 'opacity-100' : 'opacity-0'"
-        m="y-10px"
-        p="4"
-      >
-        <button class="flex items-center text-white" @click="downloadSetting()">
-          <mdi:cloud-download class="text-2xl" />
-          <span>download setting</span>
-        </button>
-        <button class="flex items-center text-white" @click="uploadSetting()">
-          <mdi:cloud-upload class="text-2xl" />
-          <span>upload setting</span>
-        </button>
-      </div>
-      <button @click="toggleIsSettingMode()">
-        <pixelarticons-sliders class="text-white text-2xl" />
+  <div id="setting">
+    <!-- modal -->
+    <div
+      class="setting__modal fixed top-5vh -right-98 z-2 w-100 h-90vh bg-gray-500 bg-opacity-50 rounded-lg transition-all duration-350 ease-in-out"
+      :class="{ '!right-0': isSettingMode }"
+      p="4"
+    >
+      <button class="flex items-center" @click="uploadSetting()">
+        <mdi:cloud-upload class="text-xl" />
+        <span>upload setting</span>
       </button>
+      <button class="flex items-center" @click="downloadSetting()">
+        <mdi:cloud-download class="text-xl" />
+        <span>download setting</span>
+      </button>
+      <!-- 书签设置 -->
+      <div>
+        <ul v-for="key of KEYBOARD_KEY" :key="key">
+          <li class="flex items-center my-2">
+            <p class="mx-2">
+              {{ key }}
+            </p>
+            <div v-if="globalState.setting.bookmarks[key]">
+              <p class="m-2">
+                {{ globalState.setting.bookmarks[key].url }}
+              </p>
+              <p class="m-2">
+                {{ globalState.setting.bookmarks[key].label }}
+              </p>
+              <p class="m-2">
+                {{ globalState.setting.bookmarks[key].icon }}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+    <!-- 入口按钮 -->
+    <button
+      class="fixed right-2 top-50vh z-10 flex flex-col justify-center items-center"
+      m="2"
+      title="设置"
+      @click="toggleIsSettingMode()"
+    >
+      <span v-if="isSettingMode">
+        <mdi:chevron-right-circle class="text-xl" />
+      </span>
+      <span v-else>
+        <ic:baseline-settings class="text-xl" />
+      </span>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { uploadSetting, downloadSetting, isSettingMode, toggleIsSettingMode } from '@/logic'
+import { KEYBOARD_KEY, uploadSetting, downloadSetting, globalState, isSettingMode, toggleIsSettingMode } from '@/logic'
+
 </script>
+
+<style>
+#setting {
+}
+#setting .setting__modal {
+}
+</style>

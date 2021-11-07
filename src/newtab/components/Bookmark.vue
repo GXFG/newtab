@@ -1,9 +1,6 @@
 <template>
-  <div id="bookmark">
-    <!-- edit -->
-    <div v-show="isSettingModalVisible" class="fixed top-0 right-0 z-2 w-80 h-100vh bg-gray-500"></div>
-    <div class="bookmark__container">
-      <!-- row -->
+  <div>
+    <div id="bookmark">
       <div v-for="(rowData, rowIndex) in keyBoardRowList" :key="rowIndex" class="bookmark__row">
         <div
           v-for="item in rowData"
@@ -22,10 +19,7 @@
           <p class="item__label">
             {{ item.label }}
           </p>
-          <div v-show="isSettingMode" class="absolute top-0 right-0 z-1">
-            <uil-edit-alt class="block m-auto text-gray-700 text-sm" />
-          </div>
-          <!-- 定位标志F & J -->
+          <!-- 按键定位标志F & J -->
           <div v-if="['f', 'j'].includes(item.key)" class="item__cursor"></div>
         </div>
       </div>
@@ -36,13 +30,7 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { useLocalStorage, useToggle } from '@vueuse/core'
-import { globalState, isSettingMode, sleep, log } from '@/logic'
-
-// 书签内按键触发间隔
-const PRESS_INTERVAL_TIME = 200
-// 键盘布局
-const KEYBOARD_KEY = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm']
-const KEY_OF_INDEX = { q: 0, w: 1, e: 2, r: 3, t: 4, y: 5, u: 6, i: 7, o: 8, p: 9, a: 10, s: 11, d: 12, f: 13, g: 14, h: 15, j: 16, k: 17, l: 18, z: 19, x: 20, c: 21, v: 22, b: 23, n: 24, m: 25 }
+import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, globalState, isSettingMode, sleep, log } from '@/logic'
 
 interface bookmarkList {
   key: string
@@ -62,7 +50,7 @@ const initBookmarkListData = () => {
   if (isInitialized.value) {
     return
   }
-  KEYBOARD_KEY.forEach((key: string, index: number) => {
+  KEYBOARD_KEY.forEach((key: string) => {
     localBookmarkList.value.push({
       key,
       url: '',
@@ -82,7 +70,7 @@ const keyBoardRowList = computed(() => {
 
 const mergeBookmarkSetting = async() => {
   if (!isInitialized) {
-    await sleep(50)
+    await sleep(100)
   }
   for (const key of Object.keys(globalState.setting.bookmarks)) {
     const item = globalState.setting.bookmarks[key]
@@ -156,47 +144,53 @@ document.onkeydown = function(e: KeyboardEvent) {
 </script>
 
 <style scoped>
-#bookmark .bookmark__container {
+#bookmark {
   margin: 30px auto 0 auto;
-  width: 560px;
 }
 
 #bookmark .bookmark__row {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #bookmark .bookmark__row:nth-child(2) {
-  padding-left: 25px;
+  margin-left: -25px;
 }
 
 #bookmark .bookmark__row:nth-child(3) {
-  padding-left: 52px;
+  margin-left: -85px;
 }
 
 #bookmark .bookmark__row .row__item {
+  flex: 0 0 auto;
   position: relative;
-  margin: 3px;
+  margin: 4px;
+  padding: 3px;
   width: 50px;
   height: 50px;
   color: var(--text-color-bookmark);
   font-size: 12px;
   text-align: center;
-  background-color: var(--bookmark-item-bg-color-default);
   border-radius: 5px;
+  background-color: var(--bg-bookmark-item-default);
+  box-shadow: var(--shadow-bookmark-item) 0px 2px 1px, var(--shadow-bookmark-item) 0px 4px 2px, var(--shadow-bookmark-item) 0px 8px 4px, var(--shadow-bookmark-item) 0px 16px 8px;
   cursor: pointer;
 }
 
 #bookmark .bookmark__row .row__item--active {
-  background-color: var(--bookmark-item-bg-color-active);
+  background-color: var(--bg-bookmark-item-active);
 }
 
 #bookmark .bookmark__row .row__item .item__key {
+  /* padding-top: 4px; */
 }
 
 #bookmark .bookmark__row .row__item .item__img {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2px;
   height: 15px;
 }
 
@@ -206,7 +200,7 @@ document.onkeydown = function(e: KeyboardEvent) {
 }
 
 #bookmark .bookmark__row .row__item .item__label {
-  padding: 0 3px;
+  margin-top: 3px;
   height: 15px;
   overflow: hidden;
   white-space: nowrap;
@@ -216,8 +210,8 @@ document.onkeydown = function(e: KeyboardEvent) {
 #bookmark .bookmark__row .row__item .item__cursor {
   position: absolute;
   left: 18px;
-  bottom: 1px;
+  bottom: 2px;
   width: 13px;
-  border: 1px solid #000;
+  border: 1px solid #475569;
 }
 </style>
