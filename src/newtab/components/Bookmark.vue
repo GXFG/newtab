@@ -5,10 +5,10 @@
         <div
           v-for="item in rowData"
           :key="item.key"
+          :title="item.url"
           class="row__item"
           :class="{ 'row__item--active': item.key === state.currSelectKey }"
-          :title="item.url"
-          @click="onClickSingleButton(item.key, item.url)"
+          @click="onOpenBookmark(item.url)"
         >
           <p class="item__key">
             {{ `${item.key.toUpperCase()}` }}
@@ -29,8 +29,8 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-import { useLocalStorage, useToggle } from '@vueuse/core'
-import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, globalState, isSettingMode, sleep, log } from '@/logic'
+import { useLocalStorage, useThrottleFn } from '@vueuse/core'
+import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, globalState, sleep, log } from '@/logic'
 
 interface bookmarkList {
   key: string
@@ -68,17 +68,29 @@ const keyBoardRowList = computed(() => {
   ]
 })
 
-const mergeBookmarkSetting = async() => {
+const mergeBookmarkSetting = useThrottleFn(async() => {
+  log('mergeBookmarkSetting')
   if (!isInitialized) {
     await sleep(100)
   }
-  for (const key of Object.keys(globalState.setting.bookmarks)) {
+  for (const key of KEYBOARD_KEY) {
     const item = globalState.setting.bookmarks[key]
     const index = KEY_OF_INDEX[key as keyof typeof KEY_OF_INDEX]
+    // 重置没有配置信息的按键
+    if (!(item && (item.url || item.label || item.icon))) {
+      localBookmarkList.value[index] = {
+        ...localBookmarkList.value[index],
+        key,
+        url: '',
+        label: '',
+        icon: '',
+      }
+      continue
+    }
     const domain = item.url.split('/')[2]
     let label = ''
     let icon = ''
-    if (!domain.includes(':')) {
+    if (domain && !domain.includes(':')) {
       // 非本地地址
       const tempSplitList = domain.split('.')
       label = tempSplitList[tempSplitList.length - 2] // 默认label为主域名去掉后缀
@@ -86,37 +98,25 @@ const mergeBookmarkSetting = async() => {
     }
     localBookmarkList.value[index] = {
       key,
-      label,
-      icon,
-      ...item,
+      url: item.url,
+      label: item.label ? item.label : label,
+      icon: item.icon ? item.icon : icon,
     }
   }
-}
+}, 1000)
 
-// mergeBookmarkSetting()
-watch(() => globalState.setting.bookmarks, () => {
-  log('mergeBookmarkSetting')
-  mergeBookmarkSetting()
-})
+watch(() => globalState.setting.bookmarks,
+  () => {
+    mergeBookmarkSetting()
+  }, {
+    deep: true,
+  })
 
 const onOpenBookmark = (url: string) => {
   if (url.length === 0) {
     return
   }
   window.open(url)
-}
-
-const [isSettingModalVisible, toggleSettingModalVisible] = useToggle(false)
-
-const onClickSingleButton = (key: string, url: string) => {
-  if (!isSettingMode.value) {
-    onOpenBookmark(url)
-    return
-  }
-  if (!isSettingModalVisible.value) {
-    toggleSettingModalVisible()
-  }
-  console.log(isSettingModalVisible.value, key)
 }
 
 // 监听键盘按键
@@ -146,72 +146,69 @@ document.onkeydown = function(e: KeyboardEvent) {
 <style scoped>
 #bookmark {
   margin: 30px auto 0 auto;
-}
+  .bookmark__row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .row__item {
+      flex: 0 0 auto;
+      position: relative;
+      margin: 4px;
+      padding: 3px;
+      width: 50px;
+      height: 50px;
+      color: var(--text-color-bookmark);
+      font-size: 12px;
+      text-align: center;
+      border-radius: 5px;
+      background-color: var(--bg-bookmark-item-default);
+      box-shadow: var(--shadow-bookmark-item) 0px 2px 1px,
+        var(--shadow-bookmark-item) 0px 4px 2px,
+        var(--shadow-bookmark-item) 0px 8px 4px,
+        var(--shadow-bookmark-item) 0px 16px 8px;
+      cursor: pointer;
 
-#bookmark .bookmark__row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+      .item__key {
+      }
 
-#bookmark .bookmark__row:nth-child(2) {
-  margin-left: -25px;
-}
+      .item__img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2px;
+        height: 15px;
+      }
 
-#bookmark .bookmark__row:nth-child(3) {
-  margin-left: -85px;
-}
+      .item__img > img {
+        width: 15px;
+        height: 15px;
+      }
 
-#bookmark .bookmark__row .row__item {
-  flex: 0 0 auto;
-  position: relative;
-  margin: 4px;
-  padding: 3px;
-  width: 50px;
-  height: 50px;
-  color: var(--text-color-bookmark);
-  font-size: 12px;
-  text-align: center;
-  border-radius: 5px;
-  background-color: var(--bg-bookmark-item-default);
-  box-shadow: var(--shadow-bookmark-item) 0px 2px 1px, var(--shadow-bookmark-item) 0px 4px 2px, var(--shadow-bookmark-item) 0px 8px 4px, var(--shadow-bookmark-item) 0px 16px 8px;
-  cursor: pointer;
-}
+      .item__label {
+        margin-top: 3px;
+        height: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
 
-#bookmark .bookmark__row .row__item--active {
-  background-color: var(--bg-bookmark-item-active);
-}
-
-#bookmark .bookmark__row .row__item .item__key {
-  /* padding-top: 4px; */
-}
-
-#bookmark .bookmark__row .row__item .item__img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2px;
-  height: 15px;
-}
-
-#bookmark .bookmark__row .row__item .item__img > img {
-  width: 15px;
-  height: 15px;
-}
-
-#bookmark .bookmark__row .row__item .item__label {
-  margin-top: 3px;
-  height: 15px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-#bookmark .bookmark__row .row__item .item__cursor {
-  position: absolute;
-  left: 18px;
-  bottom: 2px;
-  width: 13px;
-  border: 1px solid #475569;
+      .item__cursor {
+        position: absolute;
+        left: 18px;
+        bottom: 2px;
+        width: 13px;
+        border: 1px solid #475569;
+      }
+    }
+    .row__item--active {
+      background-color: var(--bg-bookmark-item-active);
+    }
+  }
+  .bookmark__row:nth-child(2) {
+    margin-left: -25px;
+  }
+  .bookmark__row:nth-child(3) {
+    margin-left: -85px;
+  }
 }
 </style>
