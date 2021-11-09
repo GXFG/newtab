@@ -30,6 +30,9 @@
       </ul>
       <!-- 通用 -->
       <div v-show="currTab === 1" class="modal__generic">
+        <p class="generic__desc">
+          上次备份时间：{{ syncTime }}
+        </p>
         <button class="generic__btn" @click="uploadSetting()">
           <mdi:cloud-upload class="icon__main" />
           <span>备份设置</span>
@@ -38,9 +41,6 @@
           <mdi:cloud-download class="icon__main" />
           <span>下载设置</span>
         </button>
-        <p class="generic__desc">
-          上次备份时间：{{ syncTime }}
-        </p>
       </div>
       <!-- 书签 -->
       <ul v-show="currTab === 2" class="modal__bookmarks">

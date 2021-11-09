@@ -23,12 +23,13 @@ export const uploadSetting = useThrottleFn(() => {
   })
 }, 2000)
 
-watch(() => globalState.setting.bookmarks,
-  () => {
-    uploadSetting()
-  }, {
-    deep: true,
-  })
+watch([
+  () => globalState.setting.bookmarks,
+], () => {
+  uploadSetting()
+}, {
+  deep: true,
+})
 
 export const downloadSetting = () => {
   return new Promise((resolve) => {

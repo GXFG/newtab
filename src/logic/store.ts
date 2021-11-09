@@ -27,6 +27,7 @@ export const SETTING_BOOKMARK_FIELD_MAP = {
     placeholder: '默认favicon',
   },
 }
+
 interface IState {
   setting: {
     lastSyncTimestamp: number
