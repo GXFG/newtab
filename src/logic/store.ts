@@ -8,6 +8,25 @@ export const KEY_OF_INDEX = { q: 0, w: 1, e: 2, r: 3, t: 4, y: 5, u: 6, i: 7, o:
 // 书签内按键触发间隔
 export const PRESS_INTERVAL_TIME = 200
 
+export const SETTING_TAB_LIST = [
+  { label: '通用', value: 1 },
+  { label: '书签', value: 2 },
+]
+
+export const SETTING_BOOKMARK_FIELD_MAP = {
+  url: {
+    label: '地址',
+    placeholder: '',
+  },
+  label: {
+    label: '名称',
+    placeholder: '默认域名',
+  },
+  icon: {
+    label: '图标',
+    placeholder: '默认favicon',
+  },
+}
 interface IState {
   setting: {
     lastSyncTimestamp: number

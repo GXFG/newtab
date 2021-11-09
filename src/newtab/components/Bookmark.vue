@@ -79,7 +79,6 @@ const mergeBookmarkSetting = useThrottleFn(async() => {
     // 重置没有配置信息的按键
     if (!(item && (item.url || item.label || item.icon))) {
       localBookmarkList.value[index] = {
-        ...localBookmarkList.value[index],
         key,
         url: '',
         label: '',
@@ -150,6 +149,9 @@ document.onkeydown = function(e: KeyboardEvent) {
     display: flex;
     justify-content: center;
     align-items: center;
+    .row__item--active {
+      background-color: var(--bg-bookmark-item-active) !important;
+    }
     .row__item {
       flex: 0 0 auto;
       position: relative;
@@ -167,7 +169,6 @@ document.onkeydown = function(e: KeyboardEvent) {
         var(--shadow-bookmark-item) 0px 8px 4px,
         var(--shadow-bookmark-item) 0px 16px 8px;
       cursor: pointer;
-
       .item__key {
       }
 
@@ -199,9 +200,6 @@ document.onkeydown = function(e: KeyboardEvent) {
         width: 13px;
         border: 1px solid #475569;
       }
-    }
-    .row__item--active {
-      background-color: var(--bg-bookmark-item-active);
     }
   }
   .bookmark__row:nth-child(2) {
