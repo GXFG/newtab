@@ -16,8 +16,8 @@
           <div class="item__img">
             <img v-if="item.icon" :src="item.icon" />
           </div>
-          <p class="item__label">
-            {{ item.label }}
+          <p class="item__name">
+            {{ item.name }}
           </p>
           <!-- 按键定位标志F & J -->
           <div v-if="['f', 'j'].includes(item.key)" class="item__cursor"></div>
@@ -35,8 +35,8 @@ import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, globalState, sleep, lo
 interface bookmarkList {
   key: string
   url: string
+  name?: string
   icon?: string
-  label?: string
 }
 
 const state = reactive({
@@ -54,6 +54,8 @@ const initBookmarkListData = () => {
     localBookmarkList.value.push({
       key,
       url: '',
+      name: '',
+      icon: '',
     })
   })
   isInitialized.value = true
@@ -77,28 +79,29 @@ const mergeBookmarkSetting = useThrottleFn(async() => {
     const item = globalState.setting.bookmarks[key]
     const index = KEY_OF_INDEX[key as keyof typeof KEY_OF_INDEX]
     // 重置没有配置信息的按键
-    if (!(item && (item.url || item.label || item.icon))) {
+    if (!(item && (item.url || item.name || item.icon))) {
       localBookmarkList.value[index] = {
         key,
         url: '',
-        label: '',
+        name: '',
         icon: '',
       }
       continue
     }
-    const domain = item.url.split('/')[2]
-    let label = ''
+    const url = item.url.includes('//') ? item.url : `https://${item.url}`
+    const domain = url.split('/')[2]
+    let name = ''
     let icon = ''
     if (domain && !domain.includes(':')) {
-      // 非本地地址
+      // 非端口地址
       const tempSplitList = domain.split('.')
-      label = tempSplitList[tempSplitList.length - 2] // 默认label为主域名去掉后缀
-      icon = `http://${domain}/favicon.ico`
+      name = tempSplitList[tempSplitList.length - 2] // 默认name为主域名去掉后缀
+      icon = `https://${domain}/favicon.ico`
     }
     localBookmarkList.value[index] = {
       key,
-      url: item.url,
-      label: item.label ? item.label : label,
+      url,
+      name: item.name ? item.name : name,
       icon: item.icon ? item.icon : icon,
     }
   }
@@ -188,7 +191,7 @@ document.onkeydown = function(e: KeyboardEvent) {
         height: 15px;
       }
 
-      .item__label {
+      .item__name {
         margin-top: 3px;
         height: 15px;
         overflow: hidden;

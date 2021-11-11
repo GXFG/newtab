@@ -4,9 +4,9 @@
     --text-color-main-reverse: #fff;
     --bg-main: #fff;
     /* setting */
-    --bg-operation-main: rgba(13, 17, 23, 1);
-    --bg-operation-item: #35363a;
-    --bg-operation-key: #52525b;
+    --bg-operation-main: #adb5bd;
+    --bg-operation-item: #d4d4d8;
+    --bg-operation-key: #f4f4f5;
     --bg-operation-input: #fff;
     /* bookmark */
     --text-color-bookmark: #0f172a;
@@ -29,7 +29,7 @@
     --bg-operation-main: rgba(13, 17, 23, 1);
     --bg-operation-item: #35363a;
     --bg-operation-key: #52525b;
-    --bg-operation-input: #fff;
+    --bg-operation-input: #a1a1aa;
     /* bookmark */
     --text-color-bookmark: #0f172a;
     --bg-bookmark-item-default: #d4d4d8;

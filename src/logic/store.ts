@@ -9,33 +9,23 @@ export const KEY_OF_INDEX = { q: 0, w: 1, e: 2, r: 3, t: 4, y: 5, u: 6, i: 7, o:
 export const PRESS_INTERVAL_TIME = 200
 
 export const SETTING_TAB_LIST = [
-  { label: '通用', value: 1 },
-  { label: '书签', value: 2 },
+  { label: 'tabGeneral', value: 1 },
+  { label: 'tabBookmarks', value: 2 },
 ]
 
-export const SETTING_BOOKMARK_FIELD_MAP = {
-  url: {
-    label: '地址',
-    placeholder: '',
-  },
-  label: {
-    label: '名称',
-    placeholder: '默认域名',
-  },
-  icon: {
-    label: '图标',
-    placeholder: '默认favicon',
-  },
-}
+const defaultLang = chrome.i18n.getUILanguage() || 'en-US'
 
 interface IState {
   setting: {
     lastSyncTimestamp: number
+    common: {
+      localLanguage: string
+    }
     bookmarks: {
       [key: string]: {
         url: string
         icon?: string
-        label?: string
+        name?: string
       }
     }
   }
@@ -44,6 +34,9 @@ interface IState {
 export const globalState: IState = reactive({
   setting: {
     lastSyncTimestamp: useLocalStorage('lastSyncTimestamp', 0, { listenToStorageChanges: true }),
+    common: {
+      localLanguage: useLocalStorage('localLanguage', defaultLang, { listenToStorageChanges: true }),
+    },
     bookmarks: useLocalStorage('bookmarks', {}, { listenToStorageChanges: true }),
   },
 })

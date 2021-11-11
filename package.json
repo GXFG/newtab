@@ -1,7 +1,7 @@
 {
   "name": "newtab",
   "displayName": "新标签页",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "个人定制的新标签页",
   "private": true,
   "scripts": {
@@ -52,6 +52,7 @@
     "vite-plugin-windicss": "^1.4.8",
     "vue": "^3.2.19",
     "vue-demi": "^0.11.4",
+    "vue-i18n": "^9.2.0-beta.17",
     "web-ext": "^6.4.0",
     "webext-bridge": "^5.0.0",
     "webextension-polyfill": "^0.8.0"

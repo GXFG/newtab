@@ -13,4 +13,5 @@ import DigitalWatch from './components/DigitalWatch.vue'
 import { downloadSetting } from '@/logic'
 
 downloadSetting()
+
 </script>

@@ -2,9 +2,8 @@
   <div id="setting">
     <!-- 入口 -->
     <button
-      class="fixed right-2 top-50vh z-10 flex flex-col justify-center items-center"
-      m="2"
-      title="设置"
+      class="setting__entry"
+      :title="`${$t('setting.mainLabel')}`"
       @click="toggleIsSettingMode()"
     >
       <span v-if="isSettingMode">
@@ -25,22 +24,40 @@
           :class="{ 'tab__item--active': tab.value === currTab }"
           @click="onChangeTab(tab.value)"
         >
-          {{ tab.label }}
+          {{ $t(`setting.${tab.label}`) }}
         </li>
       </ul>
       <!-- 通用 -->
       <div v-show="currTab === 1" class="modal__generic">
-        <p class="generic__desc">
-          上次备份时间：{{ syncTime }}
-        </p>
-        <button class="generic__btn" @click="uploadSetting()">
-          <mdi:cloud-upload class="icon__main" />
-          <span>备份设置</span>
-        </button>
-        <button class="generic__btn" @click="downloadSetting()">
-          <mdi:cloud-download class="icon__main" />
-          <span>下载设置</span>
-        </button>
+        <div class="generic__item">
+          <label class="item__label">{{ $t('setting.restoreSettings') }}:</label>
+          <button class="item__btn" @click="downloadSetting()">
+            <mdi:cloud-download class="icon__main" />
+          </button>
+        </div>
+        <div class="generic__item">
+          <label class="item__label">{{ $t('setting.backupSettings') }}:</label>
+          <button class="item__btn" @click="uploadSetting()">
+            <mdi:cloud-upload class="icon__main" />
+          </button>
+        </div>
+        <div class="generic__item">
+          <label class="item__label">{{ $t('setting.lastSyncTime') }}:</label>
+          <p>{{ syncTime }}</p>
+        </div>
+        <div class="generic__item">
+          <label class="item__label">{{ $t('setting.language') }}:</label>
+          <select v-model="proxy.$i18n.locale" class="item__locale" @change="onChangeLocale">
+            <option
+              v-for="locale in i18n.global.availableLocales"
+              :key="locale"
+              :value="locale"
+              class="locale__option"
+            >
+              {{ locale }}
+            </option>
+          </select>
+        </div>
       </div>
       <!-- 书签 -->
       <ul v-show="currTab === 2" class="modal__bookmarks">
@@ -50,25 +67,23 @@
           </div>
           <!-- 存在配置的书签 -->
           <div v-if="globalState.setting.bookmarks[key]" class="item__content">
-            <div v-for="field of ['url', 'label', 'icon']" :key="field" class="content__input">
-              <p class="input__label">
-                {{ field }}
-              </p>
+            <div v-for="field of ['url', 'name', 'icon']" :key="field" class="content__input">
+              <label class="input__label">{{ $t(`setting.${field}Label`) }}:</label>
               <input
-                v-model="globalState.setting.bookmarks[key][field as keyof typeof SETTING_BOOKMARK_FIELD_MAP]"
+                v-model="globalState.setting.bookmarks[key][field as 'url' | 'name' | 'icon']"
                 class="input__main"
                 type="text"
-                :placeholder="SETTING_BOOKMARK_FIELD_MAP[field as keyof typeof SETTING_BOOKMARK_FIELD_MAP].placeholder"
+                :placeholder="$t(`setting.${field}Placeholder`)"
               />
             </div>
             <div class="content__icon">
-              <ri:delete-bin-6-line class="icon__main" title="删除" @click="onDeleteKey(key)" />
+              <ri:delete-bin-6-line class="icon__main" @click="onDeleteKey(key)" />
             </div>
           </div>
           <!-- 创建 -->
           <div v-else class="item__content">
             <div class="content__icon">
-              <zondicons:add-solid class="icon__main" title="创建" @click="onAddKey(key)" />
+              <zondicons:add-solid class="icon__main" @click="onAddKey(key)" />
             </div>
           </div>
         </li>
@@ -79,12 +94,21 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { SETTING_TAB_LIST, SETTING_BOOKMARK_FIELD_MAP, KEYBOARD_KEY, uploadSetting, downloadSetting, globalState, isSettingMode, toggleIsSettingMode } from '@/logic'
+import i18n from '@/locales'
+import { SETTING_TAB_LIST, KEYBOARD_KEY, uploadSetting, downloadSetting, globalState, isSettingMode, toggleIsSettingMode } from '@/logic'
 
 const currTab = ref(1)
 
 const onChangeTab = (value: number) => {
   currTab.value = value
+}
+
+const { proxy }: any = getCurrentInstance()
+
+const onChangeLocale = (e: any) => {
+  const data = (e.target as HTMLInputElement).value
+  proxy.$i18n.locale = data
+  globalState.setting.common.localLanguage = data
 }
 
 const syncTime = computed(() => {
@@ -94,7 +118,7 @@ const syncTime = computed(() => {
 const onAddKey = (key: string) => {
   globalState.setting.bookmarks[key] = {
     url: '',
-    label: '',
+    name: '',
     icon: '',
   }
 }
@@ -108,15 +132,23 @@ const onDeleteKey = (key: string) => {
 <style scoped>
 #setting {
   user-select: none;
-  .icon__main {
-    font-size: 16px;
+  .setting__entry {
+    position: fixed;
+    top: 50vh;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon__main {
+      font-size: 20px;
+    }
   }
   .setting__modal {
     z-index: 2;
     position: fixed;
     top: 5vh;
     right: -540px;
-    padding: 10px;
     width: 550px;
     height: 90vh;
     border-top-left-radius: 8px;
@@ -130,35 +162,56 @@ const onDeleteKey = (key: string) => {
     }
     .modal__tab {
       display: flex;
-      justify-content: center;
       align-items: center;
+      background-color: var(--bg-main);
       .tab__item {
-        margin: 3px 10px;
-        padding: 10px 30px;
-        border-radius: 3px;
+        width: 100px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
         background-color: var(--bg-operation-item);
         cursor: pointer;
       }
       .tab__item--active {
-        background-color: var(--bg-operation-key) !important;
+        background-color: var(--bg-operation-main) !important;
+        /* background-color: var(--bg-operation-key) !important; */
       }
     }
     .modal__generic {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      .generic__btn {
+      .generic__item {
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin: 8px;
-      }
-      .generic__desc {
-        margin: 8px;
+        height: 35px;
+        .item__label {
+          padding-right: 10px;
+          width: 200px;
+          text-align: right;
+        }
+        .item__btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .icon__main {
+            font-size: 18px;
+          }
+        }
+        .item__locale {
+          width: 100px;
+          height: 25px;
+          text-align: center;
+          border-radius: 3px;
+          background-color: var(--bg-operation-input);
+          .locale__option {
+          }
+        }
       }
     }
     .modal__bookmarks {
+      padding: 0 10px;
       .bookmarks__item {
         display: flex;
         align-items: center;
@@ -183,6 +236,9 @@ const onDeleteKey = (key: string) => {
           justify-content: center;
           .content__icon {
             cursor: pointer;
+            .icon__main {
+              font-size: 16px;
+            }
           }
           .content__input {
             display: flex;
@@ -190,7 +246,7 @@ const onDeleteKey = (key: string) => {
             margin-right: 10px;
             &:nth-of-type(1) {
               .input__main {
-                width: 160px;
+                width: 140px;
               }
             }
             &:nth-of-type(2) {
@@ -204,15 +260,20 @@ const onDeleteKey = (key: string) => {
               }
             }
             .input__label {
+              flex: 0 0 auto;
               padding-right: 5px;
             }
             .input__main {
               padding: 0 5px;
               width: 120px;
               height: 25px;
-              color: var(--text-color-main-reverse);
+              color: var(--text-color-main);
               background-color: var(--bg-operation-input);
               border-radius: 3px;
+              &::-webkit-input-placeholder {
+                color: var(--text-color-main);
+                font-size: 12px;
+              }
             }
           }
         }
