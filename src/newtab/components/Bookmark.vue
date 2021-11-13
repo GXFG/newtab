@@ -14,7 +14,7 @@
             {{ `${item.key.toUpperCase()}` }}
           </p>
           <div class="item__img">
-            <img v-if="item.icon" :src="item.icon" />
+            <img v-if="item.url" :src="`chrome://favicon/size/16@2x/${item.url}`" />
           </div>
           <p class="item__name">
             {{ item.name }}

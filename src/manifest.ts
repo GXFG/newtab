@@ -26,6 +26,7 @@ export async function getManifest() {
       'tabs',
       'storage',
       'activeTab',
+      'chrome://favicon/',
       'http://*/',
       'https://*/',
     ],

@@ -2,46 +2,39 @@
   <div id="clock">
     <div class="clock__time">
       <p class="time__text">
-        {{ time }}
+        {{ state.time }}
       </p>
-      <span class="time__mid">{{ mid }}</span>
+      <span class="time__mid">{{ state.mid }}</span>
     </div>
     <p class="clock__date">
-      {{ date }}
+      {{ state.date }}
     </p>
   </div>
 </template>
 
-<script lang="ts">
-import { reactive, toRefs, onUnmounted } from 'vue'
+<script setup lang="ts">
+import { reactive, onUnmounted } from 'vue'
 import dayjs from 'dayjs'
 
-export default {
-  name: 'DigitalWatch',
-  setup() {
-    const state = reactive({
-      time: '',
-      mid: '',
-      date: '',
-    })
+const state = reactive({
+  time: '',
+  mid: '',
+  date: '',
+})
 
-    const updateTime = () => {
-      state.time = dayjs().format('hh:mm:ss')
-      state.mid = dayjs().format('a')
-      state.date = dayjs().format('YYYY-MM-DD dddd')
-    }
-    updateTime()
-    const timer = setInterval(updateTime, 1000)
-
-    onUnmounted(() => {
-      clearInterval(timer)
-    })
-
-    return {
-      ...toRefs(state),
-    }
-  },
+const updateTime = () => {
+  state.time = dayjs().format('hh:mm:ss')
+  state.mid = dayjs().format('a')
+  state.date = dayjs().format('YYYY-MM-DD dddd')
 }
+updateTime()
+
+const timer = setInterval(updateTime, 1000)
+
+onUnmounted(() => {
+  clearInterval(timer)
+})
+
 </script>
 
 <style scoped>
