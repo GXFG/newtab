@@ -49,7 +49,7 @@ export async function getManifest() {
     web_accessible_resources: [
       'dist/contentScripts/style.css',
     ],
-    content_security_policy: 'script-src \'self\' \'unsafe-eval\'',
+    content_security_policy: 'script-src \'self\' \'unsafe-eval\'; object-src \'self\'',
   }
 
   if (isDev) {

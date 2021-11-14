@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { useLocalStorage, useThrottleFn } from '@vueuse/core'
-import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, globalState, sleep, log } from '@/logic'
+import { KEYBOARD_KEY, KEY_OF_INDEX, PRESS_INTERVAL_TIME, isSettingMode, globalState, sleep, log } from '@/logic'
 
 interface bookmarkList {
   key: string
@@ -124,6 +124,9 @@ const onOpenBookmark = (url: string) => {
 // 监听键盘按键
 let timer = null as any
 document.onkeydown = function(e: KeyboardEvent) {
+  if (isSettingMode.value) {
+    return
+  }
   if (!(e.key in KEY_OF_INDEX)) {
     return
   }
