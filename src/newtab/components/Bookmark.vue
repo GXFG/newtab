@@ -150,7 +150,6 @@ document.onkeydown = function(e: KeyboardEvent) {
 
 <style scoped>
 #bookmark {
-  margin: 30px auto 0 auto;
   .bookmark__row {
     display: flex;
     justify-content: center;

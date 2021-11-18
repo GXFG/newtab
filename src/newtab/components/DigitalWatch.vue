@@ -40,10 +40,6 @@ onUnmounted(() => {
 <style scoped>
 #clock {
   font-family: "Arial Rounded MT Bold", "Rockwell", "Andale Mono", monospace;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   color: var(--text-color-watch);
   text-align: center;
   text-shadow: 2px 8px 6px var(--shadow-watch-a),
