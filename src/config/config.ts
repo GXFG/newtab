@@ -1,5 +1,3 @@
-import iconDsm from '../assets/dsm.ico';
-
 // 书签内按键触发间隔
 export const PRESS_INTERVAL_TIME = 200;
 
@@ -19,7 +17,7 @@ export const MY_BOOKMARK = [
   // 第一行
   {
     key: 'q',
-    url: 'https://github.com/cmd-cv?direction=desc&sort=updated&tab=stars',
+    url: 'https://github.com',
   },
   {
     key: 'w',
@@ -45,21 +43,15 @@ export const MY_BOOKMARK = [
   // 第二行
   {
     key: 'j',
-    url: 'http://192.168.1.55:10010',
-    label: 'AiraNg',
-    icon: 'https://ariang.mayswind.net/latest/favicon.ico',
+    url: 'https://stackblitz.com/',
   },
   {
     key: 'k',
-    url: 'https://192.168.1.55:5556',
-    label: 'nas-ip',
-    icon: iconDsm,
+    url: 'https://www.naiveui.com/zh-CN/light/components/button',
   },
   {
     key: 'l',
-    url: 'http://jarvisx.quickconnect.cn',
-    label: 'nas-qc',
-    icon: iconDsm,
+    url: 'https://icones.js.org/collection/all',
   },
   // 第三行
   {
